@@ -1,0 +1,2 @@
+# Runtime dependencies for the current MVP.
+# The CLI uses only the Python standard library.

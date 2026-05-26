@@ -5,3 +5,5 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+docs/cli_demo_output.txt
+docs/cli_terminal_demo.png

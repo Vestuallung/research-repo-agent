@@ -29,7 +29,8 @@ DATA_SUFFIXES = {".csv", ".jsonl", ".parquet", ".tsv"}
 
 
 def scan_repo(root: str | Path) -> RepoSignal:
-    base = Path(root).resolve()
+    display_root = Path(root)
+    base = display_root.resolve()
     files = [
         str(path.relative_to(base))
         for path in base.rglob("*")
@@ -58,7 +59,7 @@ def scan_repo(root: str | Path) -> RepoSignal:
             test_files.append(rel)
 
     return RepoSignal(
-        root=str(base),
+        root=str(display_root),
         files=files,
         likely_entrypoints=likely_entrypoints,
         config_files=config_files,

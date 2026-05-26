@@ -1,99 +1,66 @@
 # Research Repro Agent
 
-Research Repro Agent is a lightweight multi-agent prototype for AI paper evaluation and experiment reproduction planning. It turns a structured paper review into a concrete checklist for understanding a research codebase, deciding what to run first, and identifying which missing details block a trustworthy reproduction.
+Research Repro Agent is a reusable workflow template for turning paper reading into a reviewable research process. It combines three things that usually get mixed together too early: a paper library, a small runnable experiment, and an Agent-assisted writing and review loop.
 
-This repository is intentionally small: it is built as a demonstrable MVP for token-plan review, coursework research, and paper-reading workflows. The current version runs locally with only the Python standard library.
+The goal is practical: a classmate should be able to clone the repository, run the demo, inspect the generated report, and then reuse the same workflow for a different research topic.
 
-## Problem
+## What This Gives You
 
-Reproducing an AI paper is rarely just running one command. Important details are scattered across the paper, appendix, README, config files, training scripts, evaluation scripts, issue threads, and terminal logs. A reader has to answer several questions before spending real compute:
+- A minimal CLI that reads a structured paper evaluation and scans a local repository.
+- A demo report showing paper signals, repository signals, reproduction risks, and next actions.
+- A reusable workflow for literature review, experiment notes, Agent drafting, and human recheck.
+- Templates for a project outline and an Agent write-review protocol.
 
-- What are the paper's primary claims?
-- Which claims are directly supported by evidence?
-- Which scripts and configs correspond to those claims?
-- Are there missing seeds, run counts, prompts, datasets, or compute details?
-- What is the smallest smoke test before attempting full reproduction?
+## Four-Step Start
 
-Research Repro Agent packages that workflow as an agent pipeline.
+1. Install dependencies.
 
-## Agent Architecture
+   `python -m pip install -r requirements.txt`
 
-Paper Agent extracts research-level signals from a standardized evaluation JSON:
+2. Run the demo.
 
-- paper type and topic tags
-- primary claims and support scores
-- quality, interest, and overall scores
-- red flags and blocking questions
-- top weaknesses that affect reproducibility
+   `bash scripts/run_demo.sh`
 
-Repo Agent scans a local research repository:
+3. Read the generated report.
 
-- dependency manifests such as `pyproject.toml`, `requirements.txt`, and `environment.yml`
-- candidate entrypoints such as `cli.py`, `train.py`, `eval.py`, `main.py`, and scripts
-- configuration files
-- tests and example data
+   `examples/demo_reproduce_report.md`
 
-Planner Agent combines paper-level risk with code-level structure:
+4. Reuse the workflow for your own project.
 
-- assigns a reproduction risk level
-- proposes setup steps
-- suggests smoke tests
-- turns weaknesses into concrete reproduction tasks
+   Start from `docs/reusable_research_workflow.md`, then write your outline with `docs/project_outline_template.md`, and use `docs/agent_write_review_protocol.md` whenever an Agent writes or revises notes.
 
-Reporter writes a markdown report that can be attached to a lab note, GitHub issue, course project, or research log.
+## Manual CLI Usage
 
-## Quick Demo
-
-From the repository root:
+The demo script is only a wrapper around this command:
 
 `PYTHONPATH=src python -m research_repro_agent.cli --paper-eval examples/hneurons_evaluation.json --repo . --out examples/demo_reproduce_report.md`
 
-Expected output:
+Expected terminal result:
 
-`Wrote examples/demo_reproduce_report.md`
+`status       : completed`
 
-The generated sample report is available at `examples/demo_reproduce_report.md`.
+## How To Reuse This For Another Research Topic
 
-## Included Seed Material
+Use the repository as a scaffold rather than a finished paper. Replace the sample evaluation JSON with your own structured paper evaluation, point `--repo` to the codebase you want to inspect, and keep every Agent-generated conclusion in draft status until it has been checked against sources and experiment outputs.
 
-This project reuses an earlier AI paper evaluation protocol as its first evaluation kernel:
+Recommended project rhythm:
 
-- `examples/AI_Paper_Evaluation_Protocol.md`
-- `examples/hneurons_evaluation.json`
-
-The sample evaluation is used to demonstrate the agent flow. It is not presented as a full reproduction of the referenced paper.
-
-## Current Capabilities
-
-- Reads a standardized paper evaluation JSON.
-- Extracts claims, support levels, scores, flags, weaknesses, and blocking questions.
-- Scans repository structure without external dependencies.
-- Detects likely entrypoints, dependencies, configs, tests, and example data.
-- Generates a reproduction-oriented markdown report.
-
-## Planned Extensions
-
-- PDF and arXiv ingestion for long-context paper reading.
-- LLM-assisted claim extraction from raw papers.
-- Codebase-level semantic analysis for large research repositories.
-- Terminal log diagnosis through a Debugger Agent.
-- Patch or issue generation for missing dependencies, broken commands, and unclear configs.
-
-## Why This Needs Token Budget
-
-The useful version of this tool requires repeated long-context model calls over papers, code trees, configs, and terminal logs. A realistic workflow may include paper parsing, multi-agent planning, repository summarization, failure diagnosis, and report generation across several iterations. This makes it a practical token-consuming research assistant rather than a single-turn chatbot demo.
-
-## Example Application Identity
-
-I am a computer science undergraduate building an Agent-assisted workflow for AI paper evaluation and experiment reproduction. The goal is to help students and early-stage researchers connect paper claims, evidence quality, repository structure, and reproduction risk before spending time or compute on experiments.
+- Collect papers into a small, structured library.
+- Write one paper card per paper.
+- Group cards into a topic map and a first outline.
+- Run the CLI or an equivalent experiment script to produce an auditable report.
+- Let an Agent draft summaries and comparisons from existing notes.
+- Recheck citations, metrics, and conclusion boundaries before writing the final version.
 
 ## Repository Layout
 
-- `src/research_repro_agent`: local agent pipeline implementation
-- `examples`: protocol, sample evaluation, and generated demo report
-- `docs/workflow.md`: workflow description
-- `docs/xiaomi_token_plan_answer.md`: draft text for token-plan application
+- `src/research_repro_agent`: minimal CLI and Agent pipeline.
+- `examples`: sample paper evaluation and generated demo report.
+- `scripts/run_demo.sh`: one-command local demo.
+- `docs/reusable_research_workflow.md`: reusable research workflow.
+- `docs/agent_write_review_protocol.md`: Agent drafting and human recheck rules.
+- `docs/project_outline_template.md`: project outline template.
 
-## Status
+## Current Status
 
-Prototype. The repository is suitable for demonstrating the workflow, attaching to an application form, and extending into a richer long-context Agent system.
+This is a small workflow template, not a full automation platform. The included sample demonstrates the structure: Paper Agent extracts claims and risks, Repo Agent scans files, Planner Agent creates a reproduction checklist, and Reporter writes a markdown report.
