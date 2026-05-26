@@ -22,7 +22,7 @@ Planner Agent converted both signals into a minimal reproduction checklist.
 ## Repository Signals
 
 - Root: `.`
-- Files scanned: `37`
+- Files scanned: `38`
 - Entrypoints: `scripts/run_demo.sh, src/research_repro_agent/cli.py`
 - Dependencies: `pyproject.toml, requirements.txt`
 - Configs: `examples/hneurons_evaluation.json, pyproject.toml`
@@ -46,7 +46,7 @@ Planner Agent converted both signals into a minimal reproduction checklist.
 ## Agent Notes
 
 - Paper type: empirical_method; tags: llm, safety_alignment.
-- Detected 37 repository files, 2 candidate entrypoints.
+- Detected 38 repository files, 2 candidate entrypoints.
 - Risk from paper evaluation: The core method description contains a major internal contradiction about label direction and neuron interpretation.
 - Risk from paper evaluation: The causal claim is weakly isolated because key matched perturbation controls are absent.
 - Risk from paper evaluation: Reproducibility is limited by missing code path, seeds, run counts, uncertainty reporting, compute disclosure, and incomplete judge specification.

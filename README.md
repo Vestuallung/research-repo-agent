@@ -1,5 +1,7 @@
 # Research Repro Agent
 
+中文说明: [README.zh-CN.md](README.zh-CN.md)
+
 Research Repro Agent is a reusable workflow template for turning paper reading into a reviewable research process. It combines three things that usually get mixed together too early: a paper library, a small runnable experiment, and an Agent-assisted writing and review loop.
 
 The goal is practical: a classmate should be able to clone the repository, run the demo, inspect the generated report, and then reuse the same workflow for a different research topic.
