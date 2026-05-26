@@ -1,0 +1,9 @@
+This repository includes a minimal demo target for the Repo Agent.
+
+Files of interest:
+
+- pyproject.toml
+- src/research_repro_agent/cli.py
+- src/research_repro_agent/paper_agent.py
+- src/research_repro_agent/repo_agent.py
+- examples/hneurons_evaluation.json

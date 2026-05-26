@@ -1,0 +1,128 @@
+{
+  "schema_version": "AIPER-1.0",
+  "metadata": {
+    "title": "H-Neurons: On the Existence, Impact, and Origin of Hallucination-Associated Neurons in LLMs",
+    "venue": "arXiv preprint",
+    "year": 2025,
+    "source": "/Users/verflechtung/Documents/五月雨/五月雨/Paper/HNeurons.pdf",
+    "evaluation_date": "2026-04-09"
+  },
+  "paper_type": {
+    "primary_type": "empirical_method",
+    "secondary_tags": ["llm", "safety_alignment"]
+  },
+  "claim_table": [
+    {
+      "claim_id": "C1",
+      "claim_text": "A very sparse subset of FFN neurons can robustly predict hallucinations across models and settings.",
+      "claim_type": "empirical",
+      "evidence_locations": ["Section 2", "Table 1", "Section 6.1"],
+      "support_score": 1,
+      "notes": "Relevant evidence exists, but support is weakened by a core method contradiction and by at least one table entry that conflicts with the surrounding prose."
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "These neurons causally control a broader over-compliance tendency, not just factual hallucination.",
+      "claim_type": "causal",
+      "evidence_locations": ["Section 3", "Figure 3", "Section 6.2"],
+      "support_score": 1,
+      "notes": "Activation scaling gives suggestive intervention evidence, but key control perturbations are missing."
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "These neurons originate in pretraining and are largely preserved through instruction tuning.",
+      "claim_type": "interpretive",
+      "evidence_locations": ["Section 4", "Figure 4", "Section 6.3"],
+      "support_score": 1,
+      "notes": "Backward transfer and low drift support a weaker inheritance claim, but not a strong causal origin claim."
+    }
+  ],
+  "checklists": {
+    "universal": {
+      "main_claims_are_clearly_identifiable": "yes",
+      "main_claims_match_abstract_and_conclusion": "yes",
+      "limitations_are_explicitly_discussed": "no",
+      "related_work_is_sufficient_for_the_claim": "partial",
+      "no_obvious_contradictions_across_text_equations_figures_or_tables": "no",
+      "main_evaluation_metric_is_defined": "yes",
+      "comparison_setting_is_fair_and_comparable": "partial",
+      "essential_details_are_in_paper_or_supplement_with_explicit_pointers": "partial",
+      "risks_or_misuse_are_discussed_when_relevant": "no",
+      "licenses_terms_or_provenance_are_discussed_when_external_assets_are_used": "no"
+    },
+    "type_specific": {
+      "datasets_are_described_and_justified": "yes",
+      "train_validation_and_test_setup_is_clear": "partial",
+      "strong_baselines_are_included_or_absence_is_justified": "partial",
+      "ablations_or_control_experiments_are_included": "partial",
+      "hyperparameters_are_reported": "yes",
+      "hyperparameter_selection_procedure_is_reported": "partial",
+      "number_of_runs_is_reported_when_randomness_matters": "no",
+      "variation_or_uncertainty_is_reported": "no",
+      "failure_cases_or_limitations_are_shown": "partial",
+      "compute_setup_is_reported": "no"
+    },
+    "add_on": {
+      "model_name_version_and_access_mode_are_specified": "yes",
+      "prompt_template_or_instruction_format_is_specified": "no",
+      "decoding_parameters_are_specified": "yes",
+      "context_window_or_truncation_policy_is_specified_if_relevant": "partial",
+      "benchmark_contamination_or_memorization_risk_is_discussed": "no",
+      "model_availability_and_reproducibility_path_are_described": "partial",
+      "token_or_api_cost_is_reported_when_material": "no",
+      "evaluator_model_usage_is_disclosed_if_an_llm_judge_is_used": "yes"
+    }
+  },
+  "dimension_scores_raw_0_to_5": {
+    "D1_claim_precision": 0.5,
+    "D2_originality": 4.0,
+    "D3_technical_soundness": 2.0,
+    "D4_evidence_evaluation": 2.5,
+    "D5_reproducibility": 2.0,
+    "D6_significance": 4.0,
+    "D7_clarity_context": 2.5,
+    "D8_ethics_compliance": 1.5,
+    "community_interest": 4.0
+  },
+  "derived_scores": {
+    "quality_score": 48.0,
+    "interest_score": 77.0,
+    "overall_score_pre_penalty": 55.25,
+    "penalty_points": 13.0,
+    "overall_score_final": 42.25,
+    "compliance_rate": 0.46
+  },
+  "flags": {
+    "internal_contradiction_major": true,
+    "main_claim_unsupported": false,
+    "unfair_or_missing_key_baseline": false,
+    "reproducibility_missing_major": false,
+    "statistics_missing_for_small_gains": false,
+    "high_risk_ethics_unaddressed": false,
+    "benchmark_contamination_unaddressed": true,
+    "judge_model_opaque": true,
+    "extraction_uncertainty": false
+  },
+  "confidence": 4,
+  "decision_band": "weak",
+  "top_strengths": [
+    "The paper asks an important mechanistic question about hallucination beyond black-box hidden-state detection.",
+    "The proposed link between hallucination and over-compliance is conceptually interesting and potentially fruitful.",
+    "The paper includes multiple evidence types: sparse probing, intervention, and base-vs-chat comparison."
+  ],
+  "top_weaknesses": [
+    "The core method description contains a major internal contradiction about label direction and neuron interpretation.",
+    "The causal claim is weakly isolated because key matched perturbation controls are absent.",
+    "Reproducibility is limited by missing code path, seeds, run counts, uncertainty reporting, compute disclosure, and incomplete judge specification.",
+    "Some conclusions are stronger than the evidence, especially the pretraining-origin claim.",
+    "The prose around Table 1 overstates robustness despite at least one adverse result."
+  ],
+  "blocking_questions": [
+    "What exact label direction was used in the logistic probe?",
+    "Do the intervention results persist under random matched neurons, negative-weight neurons, or alternative sparse subsets?",
+    "How stable are selected neurons across seeds, splits, and answer-span labeling methods?",
+    "How large is benchmark contamination or memorization risk on the public QA sets used?",
+    "How sensitive are judge-based results to the GPT-4o prompt and rubric?"
+  ],
+  "one_sentence_verdict": "Interesting idea-level paper, but major internal inconsistencies and weak controls make it unreliable as strong evidence."
+}
