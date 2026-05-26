@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PaperPriorityList Artifact",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "artifact_id", "created_at", "updated_at", "producer", "status", "data"],
+  "properties": {
+    "schema_version": {"const": "autoresearch.v0"},
+    "artifact_type": {"enum": ["paper_priority_list", "selected_experiments"]},
+    "artifact_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "producer": {"type": "string"},
+    "status": {"enum": ["draft", "selected", "blocked", "needs_review", "checked"]},
+    "data": {
+      "type": "object",
+      "required": ["scores"],
+      "properties": {
+        "selected_experiment_ids": {"type": "array", "items": {"type": "string"}},
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["paper_id", "title", "method_type", "priority", "topic_relevance", "reproducibility_value", "code_availability", "evidence_quality", "method_diversity_bonus", "risk_penalty", "selected", "reason"],
+            "properties": {
+              "paper_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+              "title": {"type": "string"},
+              "method_type": {"type": "string"},
+              "priority": {"type": "number"},
+              "topic_relevance": {"type": "integer", "minimum": 0, "maximum": 5},
+              "reproducibility_value": {"type": "integer", "minimum": 0, "maximum": 5},
+              "code_availability": {"type": "integer", "minimum": 0, "maximum": 5},
+              "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 5},
+              "method_diversity_bonus": {"type": "number"},
+              "risk_penalty": {"type": "number"},
+              "selected": {"type": "boolean"},
+              "reason": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

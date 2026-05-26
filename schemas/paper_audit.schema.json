@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PaperAudit Artifact",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "artifact_id", "created_at", "updated_at", "producer", "status", "data"],
+  "properties": {
+    "schema_version": {"const": "autoresearch.v0"},
+    "artifact_type": {"const": "paper_audit"},
+    "artifact_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "producer": {"type": "string"},
+    "status": {"enum": ["draft", "candidate", "audited", "selected", "planned", "completed", "failed", "blocked", "needs_review", "checked"]},
+    "data": {
+      "type": "object",
+      "required": ["paper_id", "title", "main_claims", "evidence_quality", "code_availability", "reproducibility_value", "topic_relevance", "method_type", "limitations", "blocking_questions", "risk_penalty", "audit_conclusion", "status"],
+      "properties": {
+        "paper_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "title": {"type": "string"},
+        "main_claims": {"type": "array", "items": {"type": "string"}},
+        "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 5},
+        "code_availability": {"type": "integer", "minimum": 0, "maximum": 5},
+        "reproducibility_value": {"type": "integer", "minimum": 0, "maximum": 5},
+        "topic_relevance": {"type": "integer", "minimum": 0, "maximum": 5},
+        "method_type": {"type": "string"},
+        "limitations": {"type": "array", "items": {"type": "string"}},
+        "blocking_questions": {"type": "array", "items": {"type": "string"}},
+        "risk_penalty": {"type": "number", "minimum": 0},
+        "audit_conclusion": {"type": "string"},
+        "status": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

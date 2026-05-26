@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ReviewRecord Artifact",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "artifact_id", "created_at", "updated_at", "producer", "status", "data"],
+  "properties": {
+    "schema_version": {"const": "autoresearch.v0"},
+    "artifact_type": {"const": "review_record"},
+    "artifact_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "producer": {"type": "string"},
+    "status": {"enum": ["draft", "needs_review", "checked", "blocked"]},
+    "data": {
+      "type": "object",
+      "required": ["review_id", "citation_check", "metric_check", "boundary_check", "unresolved_questions", "status"],
+      "properties": {
+        "review_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "citation_check": {"type": "string"},
+        "metric_check": {"type": "string"},
+        "boundary_check": {"type": "string"},
+        "unresolved_questions": {"type": "array", "items": {"type": "string"}},
+        "status": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

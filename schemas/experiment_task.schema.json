@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExperimentTask Artifact",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "artifact_id", "created_at", "updated_at", "producer", "status", "data"],
+  "properties": {
+    "schema_version": {"const": "autoresearch.v0"},
+    "artifact_type": {"const": "experiment_task"},
+    "artifact_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "producer": {"type": "string"},
+    "status": {"enum": ["planned", "selected", "blocked", "completed", "failed"]},
+    "data": {
+      "type": "object",
+      "required": ["experiment_id", "paper_id", "title", "repo_url", "proposed_command", "expected_output", "selection_reason", "status"],
+      "properties": {
+        "experiment_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "paper_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "title": {"type": "string"},
+        "repo_url": {"type": "string"},
+        "proposed_command": {"type": "string"},
+        "expected_output": {"type": "string"},
+        "selection_reason": {"type": "string"},
+        "status": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

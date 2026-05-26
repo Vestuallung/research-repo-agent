@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExperimentLog Artifact",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "artifact_id", "created_at", "updated_at", "producer", "status", "data"],
+  "properties": {
+    "schema_version": {"const": "autoresearch.v0"},
+    "artifact_type": {"const": "experiment_log"},
+    "artifact_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "producer": {"type": "string"},
+    "status": {"enum": ["planned", "completed", "failed", "blocked", "needs_review", "checked"]},
+    "data": {
+      "type": "object",
+      "required": ["run_id", "experiment_id", "paper_id", "repo_url", "mode", "environment", "command", "inputs", "outputs", "artifacts", "exit_code", "status", "stdout_summary", "stderr_summary", "failure_type", "review"],
+      "properties": {
+        "run_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "experiment_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "paper_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "repo_url": {"type": "string"},
+        "mode": {"enum": ["planned", "executed", "imported"]},
+        "environment": {
+          "type": "object",
+          "required": ["platform", "python", "cwd"],
+          "properties": {
+            "platform": {"type": "string"},
+            "python": {"type": "string"},
+            "cwd": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "command": {
+          "type": "object",
+          "required": ["argv", "shell", "timeout_seconds", "working_dir"],
+          "properties": {
+            "argv": {"type": "array", "items": {"type": "string"}},
+            "shell": {"type": "boolean"},
+            "timeout_seconds": {"type": "integer", "minimum": 0},
+            "working_dir": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "inputs": {"type": "array", "items": {"type": "string"}},
+        "outputs": {"type": "array", "items": {"type": "string"}},
+        "artifacts": {"type": "array", "items": {"type": "string"}},
+        "exit_code": {"type": ["integer", "null"]},
+        "status": {"type": "string"},
+        "stdout_summary": {"type": "string"},
+        "stderr_summary": {"type": "string"},
+        "failure_type": {"enum": ["not_run", "missing_repo", "missing_dependency_manifest", "missing_entrypoint", "install_failed", "command_failed", "timeout", "data_missing", "environment_incompatible", "unsafe_command", "unknown"]},
+        "review": {
+          "type": "object",
+          "required": ["result", "notes"],
+          "properties": {
+            "result": {"type": "string"},
+            "notes": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

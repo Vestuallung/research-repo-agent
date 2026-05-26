@@ -8,7 +8,7 @@ Input: a topic, a rough motivation, and one concrete question.
 
 Output: a short problem statement with scope boundaries.
 
-Pass condition: a classmate can tell what is included, what is excluded, and what result would count as progress.
+Pass condition: the scope makes clear what is included, what is excluded, and what result would count as progress.
 
 ## 2. Build A Paper Library
 

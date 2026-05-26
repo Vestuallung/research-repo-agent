@@ -1,14 +1,19 @@
 [project]
 name = "research-repro-agent"
 version = "0.1.0"
-description = "A lightweight multi-agent MVP for paper evaluation and research code reproduction planning."
+description = "An AutoResearch-style framework for automated research auditing, Obsidian vault generation, and smoke-test planning."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
 research-repro-agent = "research_repro_agent.cli:main"
+research-repo = "autoresearch.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = [".", "src"]
+include = ["autoresearch*", "research_repro_agent*"]

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Legacy RunRecord Artifact",
+  "description": "Legacy compatibility schema. New smoke-test logs should use experiment_log.schema.json.",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "artifact_id", "created_at", "updated_at", "producer", "status", "data"],
+  "properties": {
+    "schema_version": {"const": "autoresearch.v0"},
+    "artifact_type": {"const": "experiment_log"},
+    "artifact_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "producer": {"type": "string"},
+    "status": {"enum": ["planned", "completed", "failed", "blocked", "needs_review", "checked"]},
+    "data": {
+      "type": "object",
+      "required": ["run_id", "experiment_id", "paper_id", "command", "status", "stdout_summary", "stderr_summary", "failure_type"],
+      "properties": {
+        "run_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "experiment_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "paper_id": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "command": {"type": "string"},
+        "status": {"type": "string"},
+        "stdout_summary": {"type": "string"},
+        "stderr_summary": {"type": "string"},
+        "failure_type": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

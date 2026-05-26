@@ -2,67 +2,94 @@
 
 中文说明: [README.zh-CN.md](README.zh-CN.md)
 
-Research Repro Agent is a reusable workflow template for turning paper reading into a reviewable research process. It combines three things that usually get mixed together too early: a paper library, a small runnable experiment, and an Agent-assisted writing and review loop.
+Research Repro Agent is an AutoResearch-style framework for automated research auditing. It coordinates research direction planning, paper discovery, paper review, Obsidian vault generation, experiment candidate ranking, and smoke-test recording.
 
-The goal is practical: a classmate should be able to clone the repository, run the demo, inspect the generated report, and then reuse the same workflow for a different research topic.
+The project is moving away from a single paper-reproduction demo toward a staged research automation system. The current implementation is intentionally conservative: it writes structured artifacts, keeps Agent-produced content auditable, and only runs or proposes lightweight smoke tests after papers have passed an explicit audit stage.
 
-## What This Gives You
+## Concept
 
-- A minimal CLI that reads a structured paper evaluation and scans a local repository.
-- A demo report showing paper signals, repository signals, reproduction risks, and next actions.
-- A reusable workflow for literature review, experiment notes, Agent drafting, and human recheck.
-- Templates for a project outline and an Agent write-review protocol.
+The framework is inspired by two ideas:
 
-## Four-Step Start
+- Karpathy-style `autoresearch`: a human-authored `program.md` defines the research loop, fixed rules constrain what the agent may touch, and measurable outcomes decide whether progress is real.
+- Multi-agent autonomous research pipelines such as AutoResearchClaw: research is iterative, failures become information, reports must be verifiable, and human review remains part of the loop.
 
-1. Install dependencies.
+This repository adapts those ideas to literature-driven research:
 
-   `python -m pip install -r requirements.txt`
+```text
+topic
+  -> direction planning
+  -> paper candidate registration
+  -> paper audit
+  -> candidate ranking
+  -> Obsidian vault generation
+  -> selected smoke tests
+  -> review records
+```
 
-2. Run the demo.
+## Agent Roles
 
-   `bash scripts/run_demo.sh`
+- `MainAgent`: orchestrates stages and artifact locations.
+- `DirectionAgent`: turns a topic into a research brief.
+- `LiteratureAgent`: registers paper candidates and search metadata.
+- `PaperAuditAgent`: reviews claims, evidence, code availability, and reproducibility risk.
+- `ObsidianWriterAgent`: writes an Obsidian-style research vault.
+- `ExperimentAgent`: selects audited papers for smoke tests and records run outcomes.
+- `ReviewAgent`: checks citation support, metric support, and conclusion boundaries.
 
-3. Read the generated report.
+## Quick Start
 
-   `examples/demo_reproduce_report.md`
+Install dependencies:
 
-4. Reuse the workflow for your own project.
+```bash
+python -m pip install -r requirements.txt
+```
 
-   Start from `docs/reusable_research_workflow.md`, then write your outline with `docs/project_outline_template.md`, and use `docs/agent_write_review_protocol.md` whenever an Agent writes or revises notes.
+Initialize a research workspace:
 
-## Manual CLI Usage
+```bash
+research-repo init --topic "selective context forgetting in LLM inference"
+```
 
-The demo script is only a wrapper around this command:
+Register a paper candidate:
 
-`PYTHONPATH=src python -m research_repro_agent.cli --paper-eval examples/hneurons_evaluation.json --repo . --out examples/demo_reproduce_report.md`
+```bash
+research-repo add-paper \
+  --title "Example Paper" \
+  --url "https://arxiv.org/abs/example" \
+  --code-url "https://github.com/example/project" \
+  --method-type "benchmark" \
+  --relevance 4
+```
 
-Expected terminal result:
+Audit, rank, and generate notes:
 
-`status       : completed`
+```bash
+research-repo audit-paper --paper-id example-paper
+research-repo rank-papers
+research-repo select-experiments --top-k 3
+research-repo write-vault
+research-repo review
+```
 
-## How To Reuse This For Another Research Topic
+The CLI writes JSON artifacts under `artifacts/` and Obsidian-compatible markdown under `vault/`.
 
-Use the repository as a scaffold rather than a finished paper. Replace the sample evaluation JSON with your own structured paper evaluation, point `--repo` to the codebase you want to inspect, and keep every Agent-generated conclusion in draft status until it has been checked against sources and experiment outputs.
+## Current Implementation Status
 
-Recommended project rhythm:
+Implemented:
 
-- Collect papers into a small, structured library.
-- Write one paper card per paper.
-- Group cards into a topic map and a first outline.
-- Run the CLI or an equivalent experiment script to produce an auditable report.
-- Let an Agent draft summaries and comparisons from existing notes.
-- Recheck citations, metrics, and conclusion boundaries before writing the final version.
+- JSON artifact schemas for briefs, paper candidates, audits, rankings, experiments, runs, and review records.
+- Minimal CLI for `init`, `plan`, `add-paper`, `audit-paper`, `rank-papers`, `write-vault`, `select-experiments`, `run-smoke`, and `review`.
+- Obsidian vault generation with index, topic map, paper notes, review notes, experiment notes, and run logs.
+- Smoke-test selection after paper audit, not before.
 
-## Repository Layout
+Legacy:
 
-- `src/research_repro_agent`: minimal CLI and Agent pipeline.
-- `examples`: sample paper evaluation and generated demo report.
-- `scripts/run_demo.sh`: one-command local demo.
-- `docs/reusable_research_workflow.md`: reusable research workflow.
-- `docs/agent_write_review_protocol.md`: Agent drafting and human recheck rules.
-- `docs/project_outline_template.md`: project outline template.
+- `research-repro-agent` still runs the earlier single-report demo.
+- `scripts/run_demo.sh` is kept during migration.
 
-## Current Status
+## Documentation
 
-This is a small workflow template, not a full automation platform. The included sample demonstrates the structure: Paper Agent extracts claims and risks, Repo Agent scans files, Planner Agent creates a reproduction checklist, and Reporter writes a markdown report.
+- [docs/architecture.md](docs/architecture.md): system architecture.
+- [docs/autoresearch_loop.md](docs/autoresearch_loop.md): staged loop and state transitions.
+- [docs/obsidian_vault_spec.md](docs/obsidian_vault_spec.md): vault layout and note templates.
+- [program.md](program.md): human-authored research program and agent rules.

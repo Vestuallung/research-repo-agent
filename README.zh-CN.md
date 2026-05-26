@@ -1,163 +1,117 @@
 # Research Repro Agent 使用说明
 
-Research Repro Agent 是一个可复用的科研工作流模板。它不是完整自动化平台，而是把“读论文、整理证据、检查代码库、生成复现计划、让 Agent 写草稿、人工复查”这几件事组织成一套可以交给同学照着做的流程。
+Research Repro Agent 是一个 AutoResearch 风格的自动化调研审查框架。它的目标不是生成一段无法追溯的综述文字，而是把调研过程拆成可检查的阶段：确定方向、登记论文、审查论文、生成 Obsidian 笔记库、排序可验证论文、选择 smoke test、记录运行结果、再审查结论。
 
-当前仓库自带一个最小 demo：读取一份结构化论文评估 JSON，扫描当前代码库，然后生成一份复现导向报告。
+当前实现是保守的第一版：先用 JSON 文件保存结构化产物，用 markdown 生成 Obsidian 笔记库，不承诺一开始就全自动联网检索和运行重型实验。
 
-## 1. 安装
+## 核心流程
 
-先克隆仓库并进入目录：
-
-```bash
-git clone https://github.com/Vestuallung/research-repo-agent.git
-cd research-repo-agent
+```text
+topic
+  -> DirectionAgent 确定调研方向
+  -> LiteratureAgent 登记候选论文
+  -> PaperAuditAgent 审查论文
+  -> candidate ranking 排序可验证论文
+  -> ObsidianWriterAgent 写入笔记库
+  -> ExperimentAgent 对选中论文做 smoke test
+  -> ReviewAgent 复查引用、指标和结论边界
 ```
 
-安装依赖：
+## 安装
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-当前 MVP 只使用 Python 标准库，所以 `requirements.txt` 里没有额外运行时依赖。保留这个文件是为了让以后加依赖时入口不变。
+## 最小使用流程
 
-## 2. 运行 Demo
-
-直接运行脚本：
+初始化一个调研主题：
 
 ```bash
-bash scripts/run_demo.sh
+research-repo init --topic "selective context forgetting in LLM inference"
 ```
 
-脚本实际执行的是：
+登记一篇候选论文：
 
 ```bash
-PYTHONPATH=src python -m research_repro_agent.cli \
-  --paper-eval examples/hneurons_evaluation.json \
-  --repo . \
-  --out examples/demo_reproduce_report.md
+research-repo add-paper \
+  --title "Example Paper" \
+  --url "https://arxiv.org/abs/example" \
+  --code-url "https://github.com/example/project" \
+  --method-type "benchmark" \
+  --relevance 4
 ```
 
-看到类似下面的输出就说明运行成功：
-
-```text
-Research Repro Agent
-========================================================================
-[1/4] Paper Agent
-  claims       : 3 extracted
-
-[2/4] Repo Agent
-  dependencies : pyproject.toml, requirements.txt
-
-[3/4] Planner Agent
-  risk level   : high
-
-[4/4] Reporter
-  report       : examples/demo_reproduce_report.md
-  status       : completed
-========================================================================
-```
-
-## 3. 查看输出
-
-生成报告在：
-
-```text
-examples/demo_reproduce_report.md
-```
-
-报告主要看四块：
-
-- `Paper Signals`：论文类型、标签、分数和风险等级。
-- `Claims`：论文主张以及支持程度。
-- `Repository Signals`：代码库入口、依赖文件、配置文件和测试文件。
-- `Reproduction Tasks`：下一步复现应该先做什么。
-
-这个 demo 使用的是样例评估文件：
-
-```text
-examples/hneurons_evaluation.json
-```
-
-它只是用来演示流程，不代表仓库已经完成了对应论文的真实复现。
-
-## 4. 套用到自己的研究项目
-
-推荐把自己的项目也按三层组织：
-
-```text
-your-project/
-  data/        # 论文清单、元数据、样例输入
-  notes/       # 单篇论文卡片、阅读笔记
-  experiments/ # 可运行的小实验或 demo
-  docs/        # 综述大纲、Agent 写作协议、最终报告
-```
-
-使用流程：
-
-1. 先确定研究问题，不要一开始就让 Agent 写大段综述。
-2. 每篇论文先写一张 paper card，记录标题、方法、主张、证据、局限。
-3. 把 paper cards 分组，形成相关工作地图和项目大纲。
-4. 准备一个能跑的小实验或代码库扫描任务。
-5. 让 Agent 基于已有 notes 和实验输出写草稿。
-6. 人工复查引用、指标和结论边界。
-7. 只把复查过的内容放进最终报告。
-
-## 5. Agent 写作与复查
-
-Agent 可以做：
-
-- 提取论文元数据。
-- 总结已有笔记。
-- 生成对比表。
-- 根据实验输出生成报告。
-- 列出缺失证据和阻塞问题。
-
-Agent 不应该直接做：
-
-- 编造论文、指标或实验结果。
-- 把没有证据的判断写成结论。
-- 在没有人工复查时覆盖正式笔记。
-
-更完整的规则见：
-
-```text
-docs/agent_write_review_protocol.md
-```
-
-## 6. 建议阅读顺序
-
-第一次使用时按这个顺序看：
-
-```text
-README.zh-CN.md
-docs/reusable_research_workflow.md
-docs/project_outline_template.md
-docs/agent_write_review_protocol.md
-examples/demo_reproduce_report.md
-```
-
-其中：
-
-- `docs/reusable_research_workflow.md` 解释完整研究流程。
-- `docs/project_outline_template.md` 给出项目报告大纲。
-- `docs/agent_write_review_protocol.md` 规定 Agent 写入和人工复查边界。
-
-## 7. 常见问题
-
-如果提示找不到 `research_repro_agent`，说明没有设置本地源码路径。使用脚本 `bash scripts/run_demo.sh` 可以避免这个问题；手动运行时需要保留：
+审查论文：
 
 ```bash
-PYTHONPATH=src
+research-repo audit-paper --paper-id example-paper
 ```
 
-如果报告生成了但内容看起来很少，说明输入 JSON 本身信息有限。这个工具不会凭空补论文细节，它只把已有结构化输入和代码库扫描结果整理成可复查报告。
-
-如果要分析别的代码库，把 `--repo .` 换成目标仓库路径即可：
+排序并选择适合 smoke test 的论文：
 
 ```bash
-PYTHONPATH=src python -m research_repro_agent.cli \
-  --paper-eval examples/hneurons_evaluation.json \
-  --repo /path/to/target/repo \
-  --out examples/target_repo_report.md
+research-repo rank-papers
+research-repo select-experiments --top-k 3
 ```
+
+生成 Obsidian 笔记库：
+
+```bash
+research-repo write-vault
+```
+
+生成复查记录：
+
+```bash
+research-repo review
+```
+
+## 输出位置
+
+结构化产物写入：
+
+```text
+artifacts/
+  briefs/
+  papers/
+  audits/
+  rankings/
+  experiments/
+  reviews/
+```
+
+Obsidian 笔记库写入：
+
+```text
+vault/
+  总索引.md
+  主题地图.md
+  调研方向.md
+  论文总表.md
+  gaps.md
+  papers/
+  reviews/
+  experiments/
+  logs/
+```
+
+## Smoke Test 策略
+
+实验 Agent 不会对所有论文运行测试。它只在论文审查完成后，根据以下信号选择优先级较高的论文：
+
+- 是否有代码链接；
+- topic relevance；
+- evidence quality；
+- reproducibility value；
+- method diversity；
+- risk penalty。
+
+默认只选择 `top_k = 3`。smoke test 只验证安装、入口、最小样例或官方 demo，不默认运行高成本训练。
+
+## 文档入口
+
+- `program.md`：人类编写的调研规则和 Agent 约束。
+- `docs/architecture.md`：功能与架构设计。
+- `docs/autoresearch_loop.md`：AutoResearch 风格循环。
+- `docs/obsidian_vault_spec.md`：Obsidian 笔记库规范。
